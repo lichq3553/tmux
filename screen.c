@@ -187,7 +187,7 @@ screen_pop_title(struct screen *s)
 
 	title_entry = TAILQ_FIRST(s->titles);
 	if (title_entry != NULL) {
-		screen_set_title(s, title_entry->text);
+		// screen_set_title(s, title_entry->text);
 
 		TAILQ_REMOVE(s->titles, title_entry, entry);
 		free(title_entry->text);

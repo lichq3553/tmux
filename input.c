@@ -2171,7 +2171,7 @@ input_exit_osc(struct input_ctx *ictx)
 	case 0:
 	case 2:
 		if (utf8_isvalid(p)) {
-			screen_set_title(sctx->s, p);
+			// screen_set_title(sctx->s, p);
 			server_status_window(ictx->wp->window);
 		}
 		break;
@@ -2227,7 +2227,8 @@ input_exit_apc(struct input_ctx *ictx)
 
 	if (!utf8_isvalid(ictx->input_buf))
 		return;
-	screen_set_title(sctx->s, ictx->input_buf);
+	// screen_set_title(sctx->s, ictx->input_buf);
+
 	server_status_window(ictx->wp->window);
 }
 
