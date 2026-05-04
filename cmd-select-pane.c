@@ -213,7 +213,14 @@ cmd_select_pane_exec(struct cmd *self, struct cmdq_item *item)
 
 	if (args_has(args, 'T')) {
 		title = format_single_from_target(item, args_get(args, 'T'));
-		if (screen_set_title(&wp->base, title)) {
+		if (title != NULL && *title == '\0') {
+			window_pane_clear_user_title(wp);
+			notify_pane("pane-title-changed", wp);
+			server_redraw_window_borders(wp->window);
+			server_status_window(wp->window);
+		} else if (title != NULL && screen_set_title(&wp->base, title)) {
+			free(wp->pane_user_title);
+			wp->pane_user_title = xstrdup(title);
 			notify_pane("pane-title-changed", wp);
 			server_redraw_window_borders(wp->window);
 			server_status_window(wp->window);

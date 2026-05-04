@@ -2258,9 +2258,11 @@ format_cb_pane_synchronized(struct format_tree *ft)
 static void *
 format_cb_pane_title(struct format_tree *ft)
 {
-	if (ft->wp != NULL)
-		return (xstrdup(ft->wp->base.title));
-	return (NULL);
+	if (ft->wp == NULL)
+		return (NULL);
+	if (ft->wp->pane_user_title != NULL)
+		return (xstrdup(ft->wp->pane_user_title));
+	return (xstrdup(ft->wp->base.title));
 }
 
 /* Callback for pane_top. */

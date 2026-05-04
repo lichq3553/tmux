@@ -3467,6 +3467,18 @@ enables or
 disables input to the pane.
 .Fl T
 sets the pane title.
+If
+.Ar title
+is empty,
+.Fl T
+clears any user-set title so the pane again uses titles from the application
+(typically the host and path from the shell).
+Otherwise the title is fixed until cleared with
+.Fl T
+and an empty
+.Ar title :
+application attempts to change the title are ignored while a nonempty title
+is in effect.
 .Pp
 .Fl m
 and

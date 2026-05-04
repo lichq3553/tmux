@@ -1235,6 +1235,7 @@ struct window_pane {
 
 	char		*searchstr;
 	int		 searchregex;
+	char		*pane_user_title; /* if set, pane border uses this; PTY title blocked */
 
 	int		 border_gc_set;
 	struct grid_cell border_gc;
@@ -3303,6 +3304,9 @@ void		 window_pane_update_used_data(struct window_pane *,
 		     struct window_pane_offset *, size_t);
 void		 window_set_fill_character(struct window *);
 void		 window_pane_default_cursor(struct window_pane *);
+int		 window_pane_set_title_from_pty(struct window_pane *,
+		     const char *);
+void		 window_pane_clear_user_title(struct window_pane *);
 int		 window_pane_mode(struct window_pane *);
 int		 window_pane_show_scrollbar(struct window_pane *, int);
 int		 window_pane_get_bg(struct window_pane *);

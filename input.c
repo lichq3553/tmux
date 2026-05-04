@@ -2099,7 +2099,8 @@ input_csi_dispatch_winops(struct input_ctx *ictx)
 				return;
 			case 0:
 			case 2:
-				screen_push_title(sctx->s);
+				if (wp == NULL || wp->pane_user_title == NULL)
+					screen_push_title(sctx->s);
 				break;
 			}
 			break;
@@ -2110,6 +2111,8 @@ input_csi_dispatch_winops(struct input_ctx *ictx)
 				return;
 			case 0:
 			case 2:
+				if (wp != NULL && wp->pane_user_title != NULL)
+					break;
 				screen_pop_title(sctx->s);
 				if (wp == NULL)
 					break;
@@ -2631,7 +2634,7 @@ input_exit_osc(struct input_ctx *ictx)
 	case 2:
 		if (wp != NULL &&
 		    options_get_number(wp->options, "allow-set-title") &&
-		    screen_set_title(sctx->s, p)) {
+		    window_pane_set_title_from_pty(wp, p)) {
 			notify_pane("pane-title-changed", wp);
 			server_redraw_window_borders(wp->window);
 			server_status_window(wp->window);
@@ -2709,7 +2712,7 @@ input_exit_apc(struct input_ctx *ictx)
 
 	if (wp != NULL &&
 	    options_get_number(wp->options, "allow-set-title") &&
-	    screen_set_title(sctx->s, ictx->input_buf)) {
+	    window_pane_set_title_from_pty(wp, ictx->input_buf)) {
 		notify_pane("pane-title-changed", wp);
 		server_redraw_window_borders(wp->window);
 		server_status_window(wp->window);

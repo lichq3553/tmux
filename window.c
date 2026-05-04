@@ -970,6 +970,31 @@ window_pane_create(struct window *w, u_int sx, u_int sy, u_int hlimit)
 	return (wp);
 }
 
+/* Set pane title from the pty (OSC/APC); honour select-pane -T lock. */
+int
+window_pane_set_title_from_pty(struct window_pane *wp, const char *title)
+{
+	if (wp == NULL)
+		return (0);
+	if (wp->pane_user_title != NULL)
+		return (0);
+	return (screen_set_title(&wp->base, title));
+}
+
+/* Clear a user-fixed pane title; pane again accepts pty title changes. */
+void
+window_pane_clear_user_title(struct window_pane *wp)
+{
+	char	host[HOST_NAME_MAX + 1];
+
+	free(wp->pane_user_title);
+	wp->pane_user_title = NULL;
+	if (gethostname(host, sizeof host) == 0)
+		screen_set_title(&wp->base, host);
+	else
+		screen_set_title(&wp->base, "");
+}
+
 static void
 window_pane_destroy(struct window_pane *wp)
 {
@@ -978,6 +1003,7 @@ window_pane_destroy(struct window_pane *wp)
 
 	window_pane_reset_mode_all(wp);
 	free(wp->searchstr);
+	free(wp->pane_user_title);
 
 	if (wp->fd != -1) {
 #ifdef HAVE_UTEMPTER
